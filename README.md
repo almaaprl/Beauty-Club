@@ -70,9 +70,15 @@ app/src/main/java/com/example/beautyclub
 ├── data
 │   ├── local
 │   │   ├── dao
+│   │   │ ├── MemberDao.kt
+│   │   │ └── TransactionDao.kt
 │   │   ├── entity
+│   │   │ ├── MemberEntity.kt
+│   │   │ └── TransactionEntity.kt
 │   │   └── BeautyClubDatabase.kt
 │   ├── repository
+│   │    ├── MemberRepository.kt
+│   │    └── TransactionRepository.kt
 │   └── reward
 │
 ├── navigation
@@ -200,8 +206,6 @@ Arsitektur ini membantu memisahkan tampilan, business logic, dan data sehingga k
 
 ## 👩‍💻 Pengembang
 
-**Alma Khusnia**
-
-Project Mata Kuliah Mobile Programming
-
-Universitas Pembangunan Nasional "Veteran" Jawa Timur
+**Alma Khusnia - 5025231063**
+**Rosidah Darman - 5025231307**
+**Mobile Programming - C**
