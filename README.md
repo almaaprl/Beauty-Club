@@ -1,65 +1,58 @@
 # 💄 Beauty Club Mobile App
 
-Aplikasi membership beauty clinic berbasis Android yang dikembangkan menggunakan **Kotlin**, **Jetpack Compose**, **MVVM Architecture**, dan **Room Database**.
+## Kelompok
 
-Aplikasi ini memungkinkan pengguna untuk melakukan registrasi dan login, mengelola data member, mencatat transaksi treatment, mengumpulkan poin loyalitas, menukarkan reward, serta melihat kartu member digital secara realtime menggunakan database lokal.
+| Nama           | NRP      |
+| -------------- | -------- |
+| Alma Khusnia | 5025231063 |
+| Rosidah Darman | 5025231307 |
+
 
 ---
 
+## Deskripsi Aplikasi
+
+Beauty Club merupakan aplikasi membership beauty clinic yang membantu pelanggan mengelola keanggotaan secara digital. Pengguna dapat melihat informasi member, mengumpulkan poin dari setiap transaksi treatment, menukarkan reward, mengakses kartu member digital, serta memantau riwayat aktivitas keanggotaan dalam satu aplikasi yang praktis dan mudah digunakan.
+
+---
+
+## Fitur Utama
+
+### 🚀 Splash Screen
+
+Menampilkan halaman pembuka aplikasi sebelum pengguna diarahkan ke halaman login.
+
+### 🔐 Authentication
+
+- Login: Memungkinkan member masuk ke aplikasi menggunakan email dan password yang telah terdaftar
+- Register: Memungkinkan pengguna membuat akun member baru dengan mengisi data diri yang diperlukan.
+
+### 🏠 Home
+
+- Menampilkan informasi utama member seperti total poin, ringkasan aktivitas, dan akses cepat ke fitur **My Card, Rewards, dan Transaction**.
+- My Card: Menampilkan kartu member digital yang berisi informasi member, QR Code, nomor kartu, dan status membership.
+- Rewards: Menampilkan daftar reward yang dapat ditukarkan menggunakan poin member.
+- Reward Success: Menampilkan konfirmasi bahwa proses penukaran reward berhasil dilakukan dan poin telah diperbarui.
+
+### 💰 Transaction
+
+- Menampilkan riwayat transaksi treatment yang pernah dilakukan oleh member.
+- Add Transaction: Memungkinkan penambahan transaksi treatment baru yang secara otomatis menambahkan poin ke akun member.
+- Transaction Success: Menampilkan informasi bahwa transaksi berhasil dilakukan beserta jumlah poin yang diperoleh.
+
+### 👤 Profile
+
+- Menampilkan informasi profil member serta menyediakan fitur untuk edit data profil.
+- LogoutMemungkinkan pengguna keluar dari akun dan kembali ke halaman awal aplikasi.
+---
 ## 🛠️ Teknologi yang Digunakan
 
 * Kotlin
 * Jetpack Compose
 * MVVM Architecture
 * Room Database
-* StateFlow
 * Navigation Compose
 * Material 3
-
-## 📱 Fitur Utama
-
-### 🔐 Authentication
-
-* Registrasi member baru
-* Login member
-* Logout akun
-
-### 🏠 Home
-
-* Menampilkan informasi member
-* Menampilkan total poin yang dimiliki
-* Menampilkan riwayat aktivitas terbaru
-* Navigasi ke fitur My Card, Reward, Transaction, dan Profile
-
-### 💳 My Card
-
-* Digital membership card
-* QR Code member
-* Nomor kartu member otomatis
-* Informasi tier member (Silver, Gold, Platinum)
-* Menampilkan total poin terkini
-
-### 🎁 Reward
-
-* Menampilkan daftar reward yang tersedia
-* Redeem reward menggunakan poin
-* Pengurangan poin otomatis
-* Riwayat redeem tersimpan pada database
-
-### 💰 Transaction
-
-* Menambahkan transaksi treatment
-* Perhitungan poin otomatis berdasarkan nominal transaksi
-* Menampilkan riwayat transaksi
-* Filter transaksi berdasarkan kategori
-
-### 👤 Profile
-
-* Menampilkan data member
-* Edit profil member
-* Menyimpan perubahan ke database
-* Logout dan kembali ke halaman splash
-
 ---
 
 ## 📂 Struktur Folder
@@ -70,29 +63,50 @@ app/src/main/java/com/example/beautyclub
 ├── data
 │   ├── local
 │   │   ├── dao
-│   │   │ ├── MemberDao.kt
-│   │   │ └── TransactionDao.kt
+│   │   │     ├── MemberDao.kt
+│   │   │     └── TransactionDao.kt
 │   │   ├── entity
-│   │   │ ├── MemberEntity.kt
-│   │   │ └── TransactionEntity.kt
+│   │   │     ├── MemberEntity.kt
+│   │   │     └── TransactionEntity.kt
 │   │   └── BeautyClubDatabase.kt
 │   ├── repository
-│   │    ├── MemberRepository.kt
-│   │    └── TransactionRepository.kt
+│   │   ├── MemberRepository.kt
+│   │   └── TransactionRepository.kt
 │   └── reward
 │
 ├── navigation
+│   ├── NavGraph.kt
+│   └── Screen.kt
 │
 ├── ui
 │   ├── auth
+│   │    ├── LoginScreen.kt
+│   │    ├── RegisterScreen.kt
+│   │    └── SplashScreen.kt
+│   ├── component
+│   │    ├── BeautyCard.kt
+│   │    ├── PrimaryButton.kt
+│   │    ├── TextFieldColors.kt
+│   │    └── TransactionCard.kt
 │   ├── home
+│   │    ├── HomeScreen.kt
+│   │    ├── MyCardScreen.kt
+│   │    ├── RewardScreen.kt
+│   │    └── RewardSuccessScreen.kt
 │   ├── profile
-│   ├── reward
+│   │    └── ProfileScreen.kt
+│   ├── theme
+│   │    ├── Color.kt
+│   │    ├── Theme.kt
+│   │    └── Type.kt
 │   └── transaction
+│        ├── AddTransactionScreen.kt
+│        ├── TransactionScreen.kt
+│        └── TransactionSuccessScreen.kt
 │
 ├── viewmodel
 │
-└── theme
+└── MainActivity.kt
 ```
 
 ---
@@ -137,9 +151,7 @@ app/src/main/java/com/example/beautyclub
 
 ---
 
-## 📸 Screenshot
-
-Tambahkan screenshot aplikasi pada bagian berikut:
+## 📸 Screenshot Aplikasi
 
 ### Login
 
@@ -153,13 +165,13 @@ Tambahkan screenshot aplikasi pada bagian berikut:
 
 ![My Card](screenshots/mycard.png)
 
-### Transaction
-
-![Transaction](screenshots/transaction.png)
-
 ### Reward
 
 ![Reward](screenshots/reward.png)
+
+### Transaction
+
+![Transaction](screenshots/transaction.png)
 
 ### Profile
 
@@ -181,28 +193,6 @@ git clone https://github.com/username/beautyclub.git
 
 4. Jalankan aplikasi pada Emulator atau Android Device
 
----
-
-## 🎯 Arsitektur
-
-Project ini menggunakan pola **MVVM (Model-View-ViewModel)**:
-
-```text
-UI (Compose)
-      │
-      ▼
-ViewModel
-      │
-      ▼
-Repository
-      │
-      ▼
-Room Database
-```
-
-Arsitektur ini membantu memisahkan tampilan, business logic, dan data sehingga kode lebih mudah dikelola dan dikembangkan.
-
----
 
 ## 👩‍💻 Pengembang
 
