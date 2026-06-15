@@ -23,6 +23,7 @@ import com.example.beautyclub.viewmodel.HomeViewModel
 import com.example.beautyclub.viewmodel.HomeViewModelFactory
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.beautyclub.ui.home.MyCardScreen
 import com.example.beautyclub.ui.transaction.AddTransactionScreen
 import com.example.beautyclub.ui.transaction.TransactionScreen
 import com.example.beautyclub.ui.transaction.TransactionSuccessScreen
@@ -164,9 +165,12 @@ fun NavGraph() {
             )
         }
 
-//        composable(Screen.MyCard.route) {
-//            MyCardScreen(navController)
-//        }
+        composable(Screen.MyCard.route) {
+            MyCardScreen(
+                navController = navController,
+                homeViewModel = homeViewModel
+            )
+        }
 //        composable(Screen.Reward.route) {
 //            RewardScreen(navController)
 //        }
