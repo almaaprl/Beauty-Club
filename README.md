@@ -192,10 +192,3 @@ git clone https://github.com/username/beautyclub.git
 3. Lakukan Gradle Sync
 
 4. Jalankan aplikasi pada Emulator atau Android Device
-
-
-## 👩‍💻 Pengembang
-
-**Alma Khusnia - 5025231063**
-**Rosidah Darman - 5025231307**
-**Mobile Programming - C**
