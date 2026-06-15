@@ -16,9 +16,19 @@ sealed class Screen(val route: String) {
 
     data object Transaction : Screen("transaction")
 
-    data object AddTransaction : Screen("add_transaction")
+    data object AddTransaction : Screen("add_transaction/{memberId}") {
+        fun createRoute(memberId: Int) =
+            "add_transaction/$memberId"
+    }
 
-    data object TransactionSuccess : Screen("transaction_success")
+    data object TransactionSuccess :
+        Screen("transaction_success?pointEarned={pointEarned}&totalPoints={totalPoints}") {
 
+        fun createRoute(
+            pointEarned: Int,
+            totalPoints: Int
+        ) =
+            "transaction_success?pointEarned=$pointEarned&totalPoints=$totalPoints"
+    }
     data object Profile : Screen("profile")
 }

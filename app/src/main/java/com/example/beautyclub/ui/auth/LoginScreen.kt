@@ -20,22 +20,37 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.beautyclub.navigation.Screen
 import com.example.beautyclub.ui.component.PrimaryButton
 import com.example.beautyclub.ui.component.glowOutlinedTextFieldColors
 import com.example.beautyclub.ui.theme.*
+import com.example.beautyclub.viewmodel.AuthState
+import com.example.beautyclub.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
     var email           by remember { mutableStateOf("") }
     var password        by remember { mutableStateOf("") }
     var rememberMe      by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val authState by authViewModel.authState.collectAsState()
+
+    // ── Navigasi otomatis saat login sukses ───────────────────────
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            authViewModel.resetState()
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Login.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -117,7 +132,8 @@ fun LoginScreen(navController: NavHostController) {
                                 )
                             }
                         },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
                         singleLine      = true,
@@ -139,15 +155,22 @@ fun LoginScreen(navController: NavHostController) {
                         Text("Ingat saya", fontSize = 13.sp, color = TextSecondary)
                     }
 
+                    // ── Pesan error ───────────────────────────────────────
+                    if (authState is AuthState.Error) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text      = (authState as AuthState.Error).message,
+                            color     = MaterialTheme.colorScheme.error,
+                            fontSize  = 13.sp
+                        )
+                    }
+
                     Spacer(Modifier.height(24.dp))
 
                     PrimaryButton(
-                        text    = "Masuk",
+                        text    = if (authState is AuthState.Loading) "Memproses..." else "Masuk",
                         onClick = {
-                            // TODO: validasi login via ViewModel
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Login.route) { inclusive = true }
-                            }
+                            authViewModel.login(email, password)
                         }
                     )
 
@@ -164,6 +187,7 @@ fun LoginScreen(navController: NavHostController) {
                             fontSize = 13.sp,
                             color    = TextSecondary,
                             modifier = Modifier.clickable {
+                                authViewModel.resetState()
                                 navController.navigate(Screen.Register.route)
                             }
                         )
@@ -171,13 +195,5 @@ fun LoginScreen(navController: NavHostController) {
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    MyGlowBeautyTheme {
-        LoginScreen(rememberNavController())
     }
 }

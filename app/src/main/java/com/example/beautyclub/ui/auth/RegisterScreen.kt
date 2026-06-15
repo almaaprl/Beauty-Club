@@ -20,23 +20,39 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.beautyclub.navigation.Screen
 import com.example.beautyclub.ui.component.PrimaryButton
 import com.example.beautyclub.ui.component.glowOutlinedTextFieldColors
 import com.example.beautyclub.ui.theme.*
+import com.example.beautyclub.viewmodel.AuthState
+import com.example.beautyclub.viewmodel.AuthViewModel
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
     var namaLengkap     by remember { mutableStateOf("") }
     var email           by remember { mutableStateOf("") }
     var nomorTelepon    by remember { mutableStateOf("") }
     var password        by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val authState by authViewModel.authState.collectAsState()
+
+    // ── Navigasi ke Login setelah register sukses ─────────────────
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            authViewModel.resetState()
+            // Kembali ke Login agar user login dengan akun baru
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.Register.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -86,7 +102,6 @@ fun RegisterScreen(navController: NavHostController) {
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
 
-                    // Nama Lengkap
                     FormLabel("Nama Lengkap")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -102,7 +117,6 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Email
                     FormLabel("Email")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -119,7 +133,6 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Nomor Telepon
                     FormLabel("Nomor Telepon")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -136,7 +149,6 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Password
                     FormLabel("Password")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
@@ -153,7 +165,8 @@ fun RegisterScreen(navController: NavHostController) {
                                 )
                             }
                         },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
                         singleLine      = true,
@@ -161,15 +174,27 @@ fun RegisterScreen(navController: NavHostController) {
                         colors          = glowOutlinedTextFieldColors()
                     )
 
+                    // ── Pesan error ───────────────────────────────────────
+                    if (authState is AuthState.Error) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text     = (authState as AuthState.Error).message,
+                            color    = MaterialTheme.colorScheme.error,
+                            fontSize = 13.sp
+                        )
+                    }
+
                     Spacer(Modifier.height(28.dp))
 
                     PrimaryButton(
-                        text    = "Daftar",
+                        text    = if (authState is AuthState.Loading) "Mendaftar..." else "Daftar",
                         onClick = {
-                            // TODO: simpan via ViewModel, lalu navigate
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Register.route) { inclusive = true }
-                            }
+                            authViewModel.register(
+                                name     = namaLengkap,
+                                email    = email,
+                                phone    = nomorTelepon,
+                                password = password
+                            )
                         }
                     )
 
@@ -185,7 +210,10 @@ fun RegisterScreen(navController: NavHostController) {
                             },
                             fontSize = 13.sp,
                             color    = TextSecondary,
-                            modifier = Modifier.clickable { navController.popBackStack() }
+                            modifier = Modifier.clickable {
+                                authViewModel.resetState()
+                                navController.popBackStack()
+                            }
                         )
                     }
                 }
@@ -199,12 +227,4 @@ fun RegisterScreen(navController: NavHostController) {
 @Composable
 private fun FormLabel(text: String) {
     Text(text = text, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = TextPrimary)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    MyGlowBeautyTheme {
-        RegisterScreen(rememberNavController())
-    }
 }

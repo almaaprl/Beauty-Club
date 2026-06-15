@@ -20,7 +20,7 @@ class HomeViewModelFactory(
 
             return HomeViewModel(
                 memberRepository,
-//                transactionRepository
+                transactionRepository
             ) as T
         }
 
