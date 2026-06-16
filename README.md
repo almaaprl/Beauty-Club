@@ -156,7 +156,7 @@ app/src/main/java/com/example/beautyclub
 
 ### Login
 
-<img width="335" height="777" alt="image" src="https://github.com/user-attachments/assets/04768737-31a2-43b0-bedf-f43d37a25fd4" />
+<img width="355" height="797" alt="image" src="https://github.com/user-attachments/assets/04768737-31a2-43b0-bedf-f43d37a25fd4" />
 
 
 ### Home
