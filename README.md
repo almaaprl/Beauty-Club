@@ -156,7 +156,8 @@ app/src/main/java/com/example/beautyclub
 
 ### Login
 
-![Login](screenshots/login.png)
+<img width="720" height="1612" alt="image" src="https://github.com/user-attachments/assets/5dff85a3-f27b-4cc3-a366-ef996183b019" />
+
 
 ### Home
 
