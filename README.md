@@ -1,4 +1,3 @@
-
 # 💄 Beauty Club Mobile App
 
 ## Kelompok
@@ -73,8 +72,8 @@ app/src/main/java/com/example/beautyclub
 │   ├── repository
 │   │   ├── MemberRepository.kt
 │   │   └── TransactionRepository.kt
-│   └── AppContainer
-│   └── RewardData.kt
+│   ├── AppContainer
+│   ├── RewardData.kt
 │   └── Treatmentdata.kt
 │
 ├── navigation
@@ -124,20 +123,6 @@ app/src/main/java/com/example/beautyclub
 
 ---
 
-## 📖 Penjelasan Folder
-
-| Folder          | Deskripsi                                          |
-| --------------- | -------------------------------------------------- |
-| data/local      | Berisi Room Database, DAO, dan Entity              |
-| data/repository | Penghubung antara ViewModel dan Database           |
-| data/reward     | Data dummy reward aplikasi                         |
-| navigation      | Pengaturan navigasi antar halaman                  |
-| ui              | Seluruh tampilan aplikasi berbasis Jetpack Compose |
-| viewmodel       | Logic aplikasi dan state management                |
-| theme           | Warna, typography, dan styling aplikasi            |
-
----
-
 ## 🗄️ Database Schema
 
 ### Members
@@ -164,6 +149,7 @@ app/src/main/java/com/example/beautyclub
 | amount        | Double    |
 | pointEarned   | Int       |
 | date          | String    |
+| type          | String    |
 
 <img width="1283" height="688" alt="image" src="https://github.com/user-attachments/assets/6343a2f9-180e-4e38-b030-d532be822e29" />
 
@@ -214,7 +200,7 @@ app/src/main/java/com/example/beautyclub
 1. Clone repository
 
 ```bash
-git clone https://github.com/username/beautyclub.git
+git clone https://github.com/almaaprl/Beauty-Club.git
 ```
 
 2. Buka project menggunakan Android Studio
