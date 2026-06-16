@@ -43,7 +43,7 @@ Menampilkan halaman pembuka aplikasi sebelum pengguna diarahkan ke halaman login
 ### 👤 Profile
 
 - Menampilkan informasi profil member serta menyediakan fitur untuk edit data profil.
-- LogoutMemungkinkan pengguna keluar dari akun dan kembali ke halaman awal aplikasi.
+- Logout: Memungkinkan pengguna keluar dari akun dan kembali ke halaman awal aplikasi.
 ---
 ## 🛠️ Teknologi yang Digunakan
 
