@@ -154,32 +154,41 @@ app/src/main/java/com/example/beautyclub
 
 ## 📸 Screenshot Aplikasi
 
+### Splash Screen
+
+<img width="242" height="546" alt="image" src="https://github.com/user-attachments/assets/bfa90aa2-1dec-48df-9d35-52cffddd9026" />
+
+
+### Registrasi
+
 <img width="246" height="542" alt="image" src="https://github.com/user-attachments/assets/1ddf8a04-2ab9-4446-8f47-5b3b676c39eb" />
 
 ### Login
 
-<img width="355" height="797" alt="image" src="https://github.com/user-attachments/assets/04768737-31a2-43b0-bedf-f43d37a25fd4" />
-
+<img width="243" height="546" alt="image" src="https://github.com/user-attachments/assets/d8db4d12-3c97-488c-bf1b-adbd36d0f6f8" />
 
 ### Home
 
-![Home](screenshots/home.png)
+<img width="243" height="545" alt="image" src="https://github.com/user-attachments/assets/bacd2b42-072b-4843-a22e-e1d325f90ba8" />
 
 ### My Card
 
-![My Card](screenshots/mycard.png)
+<img width="246" height="545" alt="image" src="https://github.com/user-attachments/assets/b811dc21-4c15-4222-ba58-fc24282357bc" />
 
 ### Reward
 
-![Reward](screenshots/reward.png)
+<img width="242" height="546" alt="image" src="https://github.com/user-attachments/assets/ae41a1ad-620e-4770-8d53-9c6a70d55e31" />
+
 
 ### Transaction
 
-![Transaction](screenshots/transaction.png)
+<img width="245" height="547" alt="image" src="https://github.com/user-attachments/assets/da81fc26-ad9c-4916-987c-359fba3b42cc" />
+
 
 ### Profile
 
-![Profile](screenshots/profile.png)
+<img width="245" height="546" alt="image" src="https://github.com/user-attachments/assets/59c690f6-6d5b-43e5-9cfe-8e7b8834ae95" />
+
 
 ---
 
