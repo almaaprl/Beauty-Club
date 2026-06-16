@@ -17,9 +17,9 @@ class MainActivity : ComponentActivity() {
         val appContainer = AppContainer(this)
 
         lifecycleScope.launch {
-            appContainer.memberRepository.addMember(
-                DummyData.member
-            )
+//            appContainer.memberRepository.addMember(
+//                DummyData.member
+//            )
         }
 
         setContent {

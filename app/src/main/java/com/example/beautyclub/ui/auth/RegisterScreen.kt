@@ -20,23 +20,38 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.beautyclub.navigation.Screen
 import com.example.beautyclub.ui.component.PrimaryButton
 import com.example.beautyclub.ui.component.glowOutlinedTextFieldColors
 import com.example.beautyclub.ui.theme.*
+import com.example.beautyclub.viewmodel.AuthState
+import com.example.beautyclub.viewmodel.AuthViewModel
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
     var namaLengkap     by remember { mutableStateOf("") }
     var email           by remember { mutableStateOf("") }
     var nomorTelepon    by remember { mutableStateOf("") }
     var password        by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
+    val authState by authViewModel.authState.collectAsState()
+
+    // ── Navigasi ke Login setelah register sukses ─────────────────
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            authViewModel.resetState()
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.Register.route) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -71,7 +86,7 @@ fun RegisterScreen(navController: NavHostController) {
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text     = "Buat akun baru untuk mulai menikmati layanan.",
+                text     = "Create a new account to start enjoying the service",
                 fontSize = 14.sp,
                 color    = TextSecondary
             )
@@ -86,13 +101,12 @@ fun RegisterScreen(navController: NavHostController) {
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
 
-                    // Nama Lengkap
-                    FormLabel("Nama Lengkap")
+                    FormLabel("Name")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = namaLengkap,
                         onValueChange = { namaLengkap = it },
-                        placeholder   = { Text("Masukkan nama lengkap", color = TextSecondary) },
+                        placeholder   = { Text("Enter your full name", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Person, null, tint = Secondary) },
                         modifier   = Modifier.fillMaxWidth(),
                         shape      = RoundedCornerShape(14.dp),
@@ -102,13 +116,12 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Email
                     FormLabel("Email")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = email,
                         onValueChange = { email = it },
-                        placeholder   = { Text("contoh@gmail.com", color = TextSecondary) },
+                        placeholder   = { Text("example@gmail.com", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Email, null, tint = Secondary) },
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
@@ -119,8 +132,7 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Nomor Telepon
-                    FormLabel("Nomor Telepon")
+                    FormLabel("Phone Number")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = nomorTelepon,
@@ -136,13 +148,12 @@ fun RegisterScreen(navController: NavHostController) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // Password
                     FormLabel("Password")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = password,
                         onValueChange = { password = it },
-                        placeholder   = { Text("Minimal 6 karakter", color = TextSecondary) },
+                        placeholder   = { Text("At least 6 characters", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Lock, null, tint = Secondary) },
                         trailingIcon  = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -153,7 +164,8 @@ fun RegisterScreen(navController: NavHostController) {
                                 )
                             }
                         },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (passwordVisible) VisualTransformation.None
+                        else PasswordVisualTransformation(),
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
                         singleLine      = true,
@@ -161,15 +173,27 @@ fun RegisterScreen(navController: NavHostController) {
                         colors          = glowOutlinedTextFieldColors()
                     )
 
+                    // ── Pesan error ───────────────────────────────────────
+                    if (authState is AuthState.Error) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text     = (authState as AuthState.Error).message,
+                            color    = MaterialTheme.colorScheme.error,
+                            fontSize = 13.sp
+                        )
+                    }
+
                     Spacer(Modifier.height(28.dp))
 
                     PrimaryButton(
-                        text    = "Daftar",
+                        text    = if (authState is AuthState.Loading) "Registering..." else "Register",
                         onClick = {
-                            // TODO: simpan via ViewModel, lalu navigate
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Register.route) { inclusive = true }
-                            }
+                            authViewModel.register(
+                                name     = namaLengkap,
+                                email    = email,
+                                phone    = nomorTelepon,
+                                password = password
+                            )
                         }
                     )
 
@@ -178,14 +202,17 @@ fun RegisterScreen(navController: NavHostController) {
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         Text(
                             text = buildAnnotatedString {
-                                append("Sudah punya akun? ")
+                                append("Already have an account? ")
                                 withStyle(SpanStyle(color = Primary, fontWeight = FontWeight.SemiBold)) {
-                                    append("Masuk Disini")
+                                    append("Sign In")
                                 }
                             },
                             fontSize = 13.sp,
                             color    = TextSecondary,
-                            modifier = Modifier.clickable { navController.popBackStack() }
+                            modifier = Modifier.clickable {
+                                authViewModel.resetState()
+                                navController.popBackStack()
+                            }
                         )
                     }
                 }
@@ -199,12 +226,4 @@ fun RegisterScreen(navController: NavHostController) {
 @Composable
 private fun FormLabel(text: String) {
     Text(text = text, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = TextPrimary)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    MyGlowBeautyTheme {
-        RegisterScreen(rememberNavController())
-    }
 }

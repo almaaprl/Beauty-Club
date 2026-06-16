@@ -78,7 +78,7 @@ fun SplashScreen(navController: NavHostController) {
             Spacer(Modifier.height(12.dp))
 
             Text(
-                text       = "Kecantikan eksklusif untuk perawatan\nyang Anda dambakan.",
+                text       = "Your Journey to Timeless Beauty Begins Here",
                 fontSize   = 14.sp,
                 color      = TextSecondary,
                 textAlign  = TextAlign.Center,
@@ -88,7 +88,7 @@ fun SplashScreen(navController: NavHostController) {
             Spacer(Modifier.height(64.dp))
 
             PrimaryButton(
-                text    = "Mulai →",
+                text    = "Start →",
                 onClick = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }

@@ -1,68 +1,97 @@
 package com.example.beautyclub.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.beautyclub.data.local.entity.TransactionEntity
+import com.example.beautyclub.data.repository.MemberRepository
 import com.example.beautyclub.data.repository.TransactionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+sealed class AddTransactionState {
+    data object Idle : AddTransactionState()
+    data object Loading : AddTransactionState()
+    data class Success(val pointEarned: Int, val totalPoints: Int) : AddTransactionState()
+    data class Error(val message: String) : AddTransactionState()
+}
 
 class TransactionViewModel(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val memberRepository: MemberRepository
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(TransactionUiState())
+    private val _transactions = MutableStateFlow<List<TransactionEntity>>(emptyList())
+    val transactions: StateFlow<List<TransactionEntity>> = _transactions
 
-    val uiState: StateFlow<TransactionUiState> =
-        _uiState.asStateFlow()
+    private val _addState = MutableStateFlow<AddTransactionState>(AddTransactionState.Idle)
+    val addState: StateFlow<AddTransactionState> = _addState
 
     fun loadTransactions(memberId: Int) {
-
         viewModelScope.launch {
-
-            transactionRepository
-                .getTransactions(memberId)
-                .collectLatest { transactions ->
-
-                    _uiState.value =
-                        _uiState.value.copy(
-                            transactions = transactions
-                        )
-                }
+            transactionRepository.getTransactions(memberId).collectLatest { list ->
+                _transactions.value = list
+            }
         }
     }
 
-    fun addTransaction(
-        memberId: Int,
-        treatmentName: String,
-        amount: Double,
-        date: String
-    ) {
+    // Tambah transaksi baru
+    fun addTransaction(memberId: Int, treatmentName: String, amount: Double, onSuccess: () -> Unit = {} ) {
+        if (treatmentName.isBlank()) {
+            _addState.value = AddTransactionState.Error("Please select a treatment first")
+            return
+        }
+        if (amount <= 0) {
+            _addState.value = AddTransactionState.Error("Please enter a valid amount")
+            return
+        }
 
         viewModelScope.launch {
+            _addState.value = AddTransactionState.Loading
+
+            val date = SimpleDateFormat("dd MMM yyyy • HH:mm", Locale.getDefault())
+                .format(Date())
+
+            val pointEarned = (amount / 10_000).toInt()
 
             transactionRepository.addTransaction(
-                memberId = memberId,
+                memberId      = memberId,
                 treatmentName = treatmentName,
-                amount = amount,
-                date = date
+                amount        = amount,
+                date          = date
             )
 
-            _uiState.value =
-                _uiState.value.copy(
-                    isSuccess = true
-                )
+            val updatedMember = memberRepository.getMember(memberId)
+            val totalPoints   = updatedMember?.points ?: 0
+
+            _addState.value = AddTransactionState.Success(
+                pointEarned = pointEarned,
+                totalPoints = totalPoints
+            )
+            onSuccess()
         }
     }
 
-    fun resetSuccessState() {
+    fun resetAddState() {
+        _addState.value = AddTransactionState.Idle
+    }
 
-        _uiState.value =
-            _uiState.value.copy(
-                isSuccess = false
-            )
+}
+
+class TransactionViewModelFactory(
+    private val transactionRepository: TransactionRepository,
+    private val memberRepository: MemberRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return TransactionViewModel(transactionRepository, memberRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
