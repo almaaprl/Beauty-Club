@@ -94,7 +94,7 @@ app/src/main/java/com/example/beautyclub
 │   ├── home
 │   │    ├── HomeScreen.kt
 │   │    ├── MyCardScreen.kt
-│   │    ├── RewardScreen.kt
+│   │    └── RewardScreen.kt
 │   ├── profile
 │   │    └── ProfileScreen.kt
 │   ├── theme
