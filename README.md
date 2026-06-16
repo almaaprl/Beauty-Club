@@ -156,8 +156,7 @@ app/src/main/java/com/example/beautyclub
 
 ### Login
 
-<img width="250" height="1612" alt="WhatsApp Image 2026-06-16 at 10 23 29 PM" src="https://github.com/user-attachments/assets/6d6d01e6-80d7-4afe-9b41-3f8893bf8aba" />
-
+<img width="355" height="797" alt="image" src="https://github.com/user-attachments/assets/04768737-31a2-43b0-bedf-f43d37a25fd4" />
 
 
 ### Home
