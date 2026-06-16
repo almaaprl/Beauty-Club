@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class HomeViewModel(
     private val memberRepository: MemberRepository,
@@ -23,16 +26,41 @@ class HomeViewModel(
     private val _transactions = MutableStateFlow<List<TransactionEntity>>(emptyList())
     val transactions: StateFlow<List<TransactionEntity>> = _transactions
 
-    // Dipanggil dari NavGraph setelah login sukses, pass memberId
     fun loadData(memberId: Int) {
         viewModelScope.launch {
-            // Load member sekali
             _member.value = memberRepository.getMember(memberId)
 
-            // Observe transactions secara realtime (Flow)
             transactionRepository.getTransactions(memberId).collectLatest { list ->
                 _transactions.value = list
+                // ← Auto-refresh member setiap ada perubahan transaksi
+                val currentId = _member.value?.id ?: memberId
+                _member.value = memberRepository.getMember(currentId)
             }
+        }
+    }
+
+    fun refreshMember() {
+        viewModelScope.launch {
+            val currentId = _member.value?.id ?: return@launch
+            _member.value = memberRepository.getMember(currentId)
+        }
+    }
+
+
+    fun redeemReward(member: MemberEntity, rewardName: String, pointCost: Int) {
+        viewModelScope.launch {
+            val updatedMember = member.copy(points = member.points - pointCost)
+            memberRepository.updateMember(updatedMember)
+            _member.value = updatedMember
+
+            val date = SimpleDateFormat("dd MMM yyyy • HH:mm", Locale.getDefault())
+                .format(Date())
+            transactionRepository.addRedemption(
+                memberId  = member.id,
+                rewardName = rewardName,
+                pointCost  = pointCost,
+                date       = date
+            )
         }
     }
 }

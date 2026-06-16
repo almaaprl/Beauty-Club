@@ -24,7 +24,7 @@ import com.example.beautyclub.ui.theme.*
 import com.example.beautyclub.viewmodel.HomeViewModel
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
-import com.journeyapps.barcodescanner.BarcodeEncoder
+import android.graphics.Bitmap
 
 // ── Helper: tier berdasarkan poin ─────────────────────────────────────
 data class MemberTier(
@@ -54,7 +54,6 @@ fun MyCardScreen(
     val cardNumber = formatCardNumber(memberId)
     val tier       = getMemberTier(points)
 
-    // QR content = cardNumber (bisa di-scan kasir untuk identifikasi member)
     val qrContent  = "BEAUTYCLUB:$cardNumber:$userName"
 
     Box(
@@ -336,32 +335,23 @@ fun QRCodeImage(content: String, modifier: Modifier = Modifier) {
                 scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
             }
         },
-        update  = { imageView ->
+        update = { imageView ->
             try {
-                val writer  = MultiFormatWriter()
-                val matrix  = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
-                val encoder = BarcodeEncoder()
-                val bitmap  = encoder.createBitmap(matrix).let { src ->
-                    // Ganti warna default hitam/putih dengan warna tema
-                    val w = src.width
-                    val h = src.height
-                    val pixels = IntArray(w * h)
-                    src.getPixels(pixels, 0, w, 0, 0, w, h)
-                    for (i in pixels.indices) {
-                        pixels[i] = if (pixels[i] == android.graphics.Color.BLACK) darkColor
-                        else lightColor
-                    }
-                    val bitmap = android.graphics.Bitmap.createBitmap(
-                        w,
-                        h,
-                        android.graphics.Bitmap.Config.ARGB_8888
-                    )
-                    bitmap.setPixels(pixels, 0, w, 0, 0, w, h)
-                    bitmap.also {
-                        it.setPixels(pixels, 0, w, 0, 0, w, h)
-                    }
+                val writer = MultiFormatWriter()
+                val matrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512)
+
+                val width  = matrix.width
+                val height = matrix.height
+                val pixels = IntArray(width * height) { i ->
+                    val x = i % width
+                    val y = i / width
+                    if (matrix[x, y]) darkColor else lightColor
                 }
+
+                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
                 imageView.setImageBitmap(bitmap)
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }

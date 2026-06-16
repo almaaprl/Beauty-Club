@@ -24,6 +24,7 @@ import com.example.beautyclub.viewmodel.HomeViewModelFactory
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.beautyclub.ui.home.MyCardScreen
+import com.example.beautyclub.ui.home.RewardScreen
 import com.example.beautyclub.ui.transaction.AddTransactionScreen
 import com.example.beautyclub.ui.transaction.TransactionScreen
 import com.example.beautyclub.ui.transaction.TransactionSuccessScreen
@@ -52,7 +53,6 @@ fun NavGraph() {
         factory = HomeViewModelFactory(memberRepository, transactionRepository)
     )
 
-    // Saat login sukses → load data home sesuai memberId dari DB
     val loggedInMember by authViewModel.loggedInMember.collectAsState()
     LaunchedEffect(loggedInMember) {
         loggedInMember?.let { member ->
@@ -81,11 +81,6 @@ fun NavGraph() {
 
         composable(Screen.Splash.route) {
             SplashScreen(navController)
-            // PENTING: di SplashScreen.kt, pastikan navigate ke Login seperti ini:
-            // navController.navigate(Screen.Login.route) {
-            //     popUpTo(Screen.Splash.route) { inclusive = true }
-            // }
-            // Agar tombol back dari Login tidak balik ke Splash
         }
 
         composable(Screen.Login.route) {
@@ -135,7 +130,8 @@ fun NavGraph() {
             AddTransactionScreen(
                 navController = navController,
                 memberId = memberId,
-                transactionViewModel = transactionViewModel
+                transactionViewModel = transactionViewModel,
+                homeViewModel        = homeViewModel
             )
         }
 
@@ -171,9 +167,13 @@ fun NavGraph() {
                 homeViewModel = homeViewModel
             )
         }
-//        composable(Screen.Reward.route) {
-//            RewardScreen(navController)
-//        }
+
+        composable(Screen.Reward.route) {
+            RewardScreen(
+                navController = navController,
+                homeViewModel = homeViewModel
+            )
+        }
 
         composable(Screen.Profile.route) {
 

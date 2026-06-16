@@ -42,7 +42,6 @@ fun LoginScreen(
 
     val authState by authViewModel.authState.collectAsState()
 
-    // ── Navigasi otomatis saat login sukses ───────────────────────
     LaunchedEffect(authState) {
         if (authState is AuthState.Success) {
             authViewModel.resetState()
@@ -85,7 +84,7 @@ fun LoginScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text     = "Selamat datang kembali!",
+                text     = "Welcome back!",
                 fontSize = 14.sp,
                 color    = TextSecondary
             )
@@ -105,7 +104,7 @@ fun LoginScreen(
                     OutlinedTextField(
                         value         = email,
                         onValueChange = { email = it },
-                        placeholder   = { Text("Masukkan email disini", color = TextSecondary) },
+                        placeholder   = { Text("Enter your email", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Email, null, tint = Secondary) },
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
@@ -121,7 +120,7 @@ fun LoginScreen(
                     OutlinedTextField(
                         value         = password,
                         onValueChange = { password = it },
-                        placeholder   = { Text("Masukkan password", color = TextSecondary) },
+                        placeholder   = { Text("Enter your password", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Lock, null, tint = Secondary) },
                         trailingIcon  = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -152,7 +151,7 @@ fun LoginScreen(
                                 uncheckedColor = TextSecondary
                             )
                         )
-                        Text("Ingat saya", fontSize = 13.sp, color = TextSecondary)
+                        Text("Remember me", fontSize = 13.sp, color = TextSecondary)
                     }
 
                     // ── Pesan error ───────────────────────────────────────
@@ -168,7 +167,7 @@ fun LoginScreen(
                     Spacer(Modifier.height(24.dp))
 
                     PrimaryButton(
-                        text    = if (authState is AuthState.Loading) "Memproses..." else "Masuk",
+                        text    = if (authState is AuthState.Loading) "Processing..." else "Login",
                         onClick = {
                             authViewModel.login(email, password)
                         }
@@ -179,9 +178,9 @@ fun LoginScreen(
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         Text(
                             text = buildAnnotatedString {
-                                append("Belum punya akun? ")
+                                append("Don't have an account? ")
                                 withStyle(SpanStyle(color = Primary, fontWeight = FontWeight.SemiBold)) {
-                                    append("Daftar")
+                                    append("Sign Up")
                                 }
                             },
                             fontSize = 13.sp,

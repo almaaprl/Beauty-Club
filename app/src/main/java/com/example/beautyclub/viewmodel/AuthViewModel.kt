@@ -25,14 +25,13 @@ class AuthViewModel(
     private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
     val authState: StateFlow<AuthState> = _authState
 
-    // Data member yang sedang login — dipakai HomeScreen
     private val _loggedInMember = MutableStateFlow<MemberEntity?>(null)
     val loggedInMember: StateFlow<MemberEntity?> = _loggedInMember
 
     // ── Login ─────────────────────────────────────────────────────
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Email dan password tidak boleh kosong")
+            _authState.value = AuthState.Error("Email and password cannot be empty")
             return
         }
 
@@ -43,7 +42,7 @@ class AuthViewModel(
                 _loggedInMember.value = member
                 _authState.value = AuthState.Success
             } else {
-                _authState.value = AuthState.Error("Email atau password salah")
+                _authState.value = AuthState.Error("Invalid email or password")
             }
         }
     }
@@ -56,11 +55,11 @@ class AuthViewModel(
         password: String
     ) {
         if (name.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Semua kolom harus diisi")
+            _authState.value = AuthState.Error("All fields are required")
             return
         }
         if (password.length < 6) {
-            _authState.value = AuthState.Error("Password minimal 6 karakter")
+            _authState.value = AuthState.Error("Password must be at least 6 characters")
             return
         }
 
@@ -78,7 +77,7 @@ class AuthViewModel(
         }
     }
 
-    // ── Reset state (supaya tidak re-trigger navigasi) ────────────
+    // ── Reset state ────────────
     fun resetState() {
         _authState.value = AuthState.Idle
     }
@@ -90,7 +89,6 @@ class AuthViewModel(
     }
 }
 
-// ── Factory — wajib karena ViewModel punya constructor parameter ──
 class AuthViewModelFactory(
     private val memberRepository: MemberRepository
 ) : ViewModelProvider.Factory {

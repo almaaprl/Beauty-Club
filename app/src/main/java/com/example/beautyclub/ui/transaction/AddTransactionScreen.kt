@@ -1,7 +1,6 @@
 package com.example.beautyclub.ui.transaction
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +26,7 @@ import com.example.beautyclub.data.toPoints
 import com.example.beautyclub.navigation.Screen
 import com.example.beautyclub.ui.theme.*
 import com.example.beautyclub.viewmodel.AddTransactionState
+import com.example.beautyclub.viewmodel.HomeViewModel          // ← import ini
 import com.example.beautyclub.viewmodel.TransactionViewModel
 import java.text.NumberFormat
 import java.util.Locale
@@ -36,14 +36,14 @@ import java.util.Locale
 fun AddTransactionScreen(
     navController: NavHostController,
     memberId: Int,
-    transactionViewModel: TransactionViewModel
+    transactionViewModel: TransactionViewModel,
+    homeViewModel: HomeViewModel                               // ← parameter ini
 ) {
-    var selectedTreatment  by remember { mutableStateOf<com.example.beautyclub.data.Treatment?>(null) }
-    var dropdownExpanded   by remember { mutableStateOf(false) }
+    var selectedTreatment by remember { mutableStateOf<com.example.beautyclub.data.Treatment?>(null) }
+    var dropdownExpanded  by remember { mutableStateOf(false) }
 
     val addState by transactionViewModel.addState.collectAsState()
 
-    // Auto-navigate ke Success ketika transaksi berhasil disimpan
     LaunchedEffect(addState) {
         if (addState is AddTransactionState.Success) {
             val s = addState as AddTransactionState.Success
@@ -60,7 +60,6 @@ fun AddTransactionScreen(
 
     val treatments = TreatmentData.list
 
-    // Format harga Rupiah
     fun formatRp(amount: Double): String =
         "Rp " + NumberFormat.getNumberInstance(Locale("id", "ID")).format(amount.toLong())
 
@@ -75,10 +74,8 @@ fun AddTransactionScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 32.dp)
         ) {
-            // ── Tombol Back + Judul ──────────────────────────────
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            // ── Back + Title ─────────────────────────────────────
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick  = { navController.popBackStack() },
                     modifier = Modifier.size(36.dp)
@@ -110,7 +107,7 @@ fun AddTransactionScreen(
 
             Spacer(Modifier.height(28.dp))
 
-            // ── Card Form ────────────────────────────────────────
+            // ── Form Card ────────────────────────────────────────
             Card(
                 modifier  = Modifier.fillMaxWidth(),
                 shape     = RoundedCornerShape(20.dp),
@@ -121,7 +118,7 @@ fun AddTransactionScreen(
 
                     // ── Dropdown Treatment ───────────────────────
                     Text(
-                        text       = "Nama treatment",
+                        text       = "Treatment Name",
                         fontSize   = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color      = TextPrimary
@@ -137,9 +134,9 @@ fun AddTransactionScreen(
                             onValueChange = {},
                             readOnly      = true,
                             placeholder   = {
-                                Text("Misal: Hydrafacial Premium", color = TextSecondary)
+                                Text("Example: Hydrafacial Premium", color = TextSecondary)
                             },
-                            leadingIcon = {
+                            leadingIcon  = {
                                 Icon(
                                     Icons.Outlined.Bookmark, null,
                                     tint     = Secondary,
@@ -147,10 +144,7 @@ fun AddTransactionScreen(
                                 )
                             },
                             trailingIcon = {
-                                Icon(
-                                    Icons.Outlined.ArrowDropDown, null,
-                                    tint = TextSecondary
-                                )
+                                Icon(Icons.Outlined.ArrowDropDown, null, tint = TextSecondary)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -168,10 +162,8 @@ fun AddTransactionScreen(
                             onDismissRequest = { dropdownExpanded = false },
                             modifier         = Modifier.background(Color.White)
                         ) {
-                            // Grouping by category
                             val grouped = treatments.groupBy { it.category }
                             grouped.forEach { (category, items) ->
-                                // Header kategori
                                 DropdownMenuItem(
                                     text = {
                                         Text(
@@ -217,9 +209,9 @@ fun AddTransactionScreen(
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── Nominal (auto-fill, read only) ───────────
+                    // ── Payment Amount ───────────────────────────
                     Text(
-                        text       = "Nominal pembayaran",
+                        text       = "Payment Amount",
                         fontSize   = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color      = TextPrimary
@@ -234,11 +226,7 @@ fun AddTransactionScreen(
                         readOnly      = true,
                         placeholder   = { Text("0", color = TextSecondary) },
                         prefix        = {
-                            Text(
-                                "Rp  ",
-                                fontWeight = FontWeight.Medium,
-                                color      = TextPrimary
-                            )
+                            Text("Rp  ", fontWeight = FontWeight.Medium, color = TextPrimary)
                         },
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(12.dp),
@@ -252,11 +240,11 @@ fun AddTransactionScreen(
 
                     Spacer(Modifier.height(16.dp))
 
-                    // ── Info Kalkulasi Poin ──────────────────────
+                    // ── Point Calculation Info ───────────────────
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape    = RoundedCornerShape(12.dp),
-                        colors   = CardDefaults.cardColors(
+                        modifier  = Modifier.fillMaxWidth(),
+                        shape     = RoundedCornerShape(12.dp),
+                        colors    = CardDefaults.cardColors(
                             containerColor = Primary.copy(alpha = 0.06f)
                         ),
                         elevation = CardDefaults.cardElevation(0.dp)
@@ -279,22 +267,22 @@ fun AddTransactionScreen(
                             }
                             Spacer(Modifier.height(4.dp))
                             Text(
-                                text     = "1 poin = Rp10.000",
-                                fontSize = 12.sp,
-                                color    = Primary,
+                                text       = "1 point = Rp10.000",
+                                fontSize   = 12.sp,
+                                color      = Primary,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text     = "Contoh: Rp150.000 = 15 poin",
+                                text  = "Example: Rp150.000 = 15 points",
                                 fontSize = 11.sp,
-                                color    = TextSecondary
+                                color = TextSecondary
                             )
                             if (selectedTreatment != null) {
                                 Spacer(Modifier.height(6.dp))
                                 HorizontalDivider(color = Primary.copy(alpha = 0.15f))
                                 Spacer(Modifier.height(6.dp))
                                 Text(
-                                    text = "Treatment ini: +${selectedTreatment!!.price.toPoints()} poin",
+                                    text       = "This treatment: +${selectedTreatment!!.price.toPoints()} points",
                                     fontSize   = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     color      = Color(0xFF2E7D32)
@@ -305,14 +293,17 @@ fun AddTransactionScreen(
 
                     Spacer(Modifier.height(28.dp))
 
-                    // ── Tombol Save ──────────────────────────────
+                    // ── Save Button ──────────────────────────────
                     Button(
-                        onClick  = {
+                        onClick = {
                             selectedTreatment?.let { t ->
                                 transactionViewModel.addTransaction(
                                     memberId      = memberId,
                                     treatmentName = t.name,
-                                    amount        = t.price
+                                    amount        = t.price,
+                                    onSuccess     = {
+                                        homeViewModel.refreshMember()  // ← refresh poin
+                                    }
                                 )
                             }
                         },
@@ -336,7 +327,7 @@ fun AddTransactionScreen(
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text       = if (addState is AddTransactionState.Loading)
-                                "Menyimpan..." else "Save",
+                                "Saving..." else "Save",
                             fontSize   = 15.sp,
                             fontWeight = FontWeight.SemiBold,
                             color      = Color.White

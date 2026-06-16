@@ -29,6 +29,8 @@ import com.example.beautyclub.navigation.Screen
 import com.example.beautyclub.ui.component.BeautyCard
 import com.example.beautyclub.ui.theme.*
 import com.example.beautyclub.viewmodel.HomeViewModel
+import androidx.compose.material.icons.outlined.MonetizationOn
+import androidx.compose.foundation.clickable
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -74,32 +76,34 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column {
-                        Text(
-                            text       = "Beauty Club",
-                            fontSize   = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color      = Primary
-                        )
                         Spacer(Modifier.height(2.dp))
                         Text(
                             text       = "Halo, $userName",
-                            fontSize   = 22.sp,
+                            fontSize   = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color      = TextPrimary
                         )
+                        Spacer(Modifier.height(5.dp))
                         Text(
-                            text     = "Welcome to Beauty Club Area",
+                            text     = "Welcome to GlowMe Beauty Area",
                             fontSize = 13.sp,
                             color    = TextSecondary
                         )
                     }
 
-                    // Avatar inisial
+
                     Box(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
-                            .background(Secondary.copy(alpha = 0.18f)),
+                            .background(Secondary.copy(alpha = 0.18f))
+                            .clickable {
+                                navController.navigate(Screen.Profile.route) {
+                                    popUpTo(Screen.Home.route) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState    = true
+                                }
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -122,7 +126,7 @@ fun HomeScreen(
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                 ) {
                     Box(modifier = Modifier.fillMaxWidth()) {
-                        // Lingkaran dekorasi kanan (seperti di Figma)
+                        // Dekorasi lingkaran
                         Box(
                             modifier = Modifier
                                 .size(140.dp)
@@ -140,24 +144,45 @@ fun HomeScreen(
                                 .background(Primary.copy(alpha = 0.15f))
                         )
 
-                        Column(
-                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 20.dp)
+                        Row(
+                            modifier          = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp, vertical = 20.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text          = "TOTAL POINTS",
-                                fontSize      = 11.sp,
-                                color         = TextOnPrimary.copy(alpha = 0.75f),
-                                fontWeight    = FontWeight.Medium,
-                                letterSpacing = 1.5.sp
-                            )
-                            Spacer(Modifier.height(6.dp))
-                            Text(
-                                text       = totalPoints.toString(),
-                                fontSize   = 52.sp,
-                                fontWeight = FontWeight.Bold,
-                                color      = TextOnPrimary,
-                                lineHeight  = 56.sp
-                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text          = "TOTAL POINTS",
+                                    fontSize      = 11.sp,
+                                    color         = TextOnPrimary.copy(alpha = 0.75f),
+                                    fontWeight    = FontWeight.Medium,
+                                    letterSpacing = 1.5.sp
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                Text(
+                                    text       = totalPoints.toString(),
+                                    fontSize   = 52.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color      = TextOnPrimary,
+                                    lineHeight = 56.sp
+                                )
+                            }
+
+                            // ── Icon coin ────────────────────────────────
+                            Box(
+                                modifier = Modifier
+                                    .size(52.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White.copy(alpha = 0.15f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector        = Icons.Outlined.MonetizationOn,  // icon coin
+                                    contentDescription = null,
+                                    tint               = Color.White,
+                                    modifier           = Modifier.size(30.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -236,7 +261,7 @@ fun HomeScreen(
                                 )
                                 Spacer(Modifier.height(8.dp))
                                 Text(
-                                    text     = "Belum ada transaksi",
+                                    text     = "No transactions",
                                     fontSize = 14.sp,
                                     color    = TextSecondary
                                 )
@@ -326,11 +351,10 @@ fun BottomNavBar(navController: NavHostController) {
 
         val items = listOf(
             NavItem("Home",        Icons.Outlined.Home,       Screen.Home.route),
-            NavItem("Transaksi",   Icons.Outlined.Receipt,       Screen.Transaction.route),
-            NavItem("Profil",      Icons.Outlined.Person,        Screen.Profile.route)
+            NavItem("Transaction",   Icons.Outlined.Receipt,       Screen.Transaction.route),
+            NavItem("Profile",      Icons.Outlined.Person,        Screen.Profile.route)
         )
 
-        // Cek route aktif — supaya icon Home highlight saat di Home
         val currentRoute = navController.currentBackStackEntry?.destination?.route
 
         items.forEach { item ->

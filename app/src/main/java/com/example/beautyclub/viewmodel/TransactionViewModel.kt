@@ -32,7 +32,6 @@ class TransactionViewModel(
     private val _addState = MutableStateFlow<AddTransactionState>(AddTransactionState.Idle)
     val addState: StateFlow<AddTransactionState> = _addState
 
-    // Load semua transaksi milik member (realtime Flow)
     fun loadTransactions(memberId: Int) {
         viewModelScope.launch {
             transactionRepository.getTransactions(memberId).collectLatest { list ->
@@ -42,13 +41,13 @@ class TransactionViewModel(
     }
 
     // Tambah transaksi baru
-    fun addTransaction(memberId: Int, treatmentName: String, amount: Double) {
+    fun addTransaction(memberId: Int, treatmentName: String, amount: Double, onSuccess: () -> Unit = {} ) {
         if (treatmentName.isBlank()) {
-            _addState.value = AddTransactionState.Error("Pilih treatment terlebih dahulu")
+            _addState.value = AddTransactionState.Error("Please select a treatment first")
             return
         }
         if (amount <= 0) {
-            _addState.value = AddTransactionState.Error("Nominal tidak valid")
+            _addState.value = AddTransactionState.Error("Please enter a valid amount")
             return
         }
 
@@ -67,7 +66,6 @@ class TransactionViewModel(
                 date          = date
             )
 
-            // Ambil total poin terbaru setelah transaksi
             val updatedMember = memberRepository.getMember(memberId)
             val totalPoints   = updatedMember?.points ?: 0
 
@@ -75,12 +73,14 @@ class TransactionViewModel(
                 pointEarned = pointEarned,
                 totalPoints = totalPoints
             )
+            onSuccess()
         }
     }
 
     fun resetAddState() {
         _addState.value = AddTransactionState.Idle
     }
+
 }
 
 class TransactionViewModelFactory(
