@@ -139,6 +139,9 @@ app/src/main/java/com/example/beautyclub
 | password | String    |
 | points   | Int       |
 
+<img width="1281" height="245" alt="image" src="https://github.com/user-attachments/assets/a02712c4-5642-4ae7-9a08-2b1a8e7e3124" />
+
+
 ### Transactions
 
 | Field         | Tipe Data |
@@ -149,6 +152,8 @@ app/src/main/java/com/example/beautyclub
 | amount        | Double    |
 | pointEarned   | Int       |
 | date          | String    |
+
+<img width="1283" height="688" alt="image" src="https://github.com/user-attachments/assets/6343a2f9-180e-4e38-b030-d532be822e29" />
 
 ---
 
