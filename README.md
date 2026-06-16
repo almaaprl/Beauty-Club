@@ -73,7 +73,9 @@ app/src/main/java/com/example/beautyclub
 │   ├── repository
 │   │   ├── MemberRepository.kt
 │   │   └── TransactionRepository.kt
-│   └── reward
+│   └── AppContainer
+│   └── RewardData.kt
+│   └── Treatmentdata.kt
 │
 ├── navigation
 │   ├── NavGraph.kt
@@ -93,7 +95,6 @@ app/src/main/java/com/example/beautyclub
 │   │    ├── HomeScreen.kt
 │   │    ├── MyCardScreen.kt
 │   │    ├── RewardScreen.kt
-│   │    └── RewardSuccessScreen.kt
 │   ├── profile
 │   │    └── ProfileScreen.kt
 │   ├── theme
@@ -106,6 +107,17 @@ app/src/main/java/com/example/beautyclub
 │        └── TransactionSuccessScreen.kt
 │
 ├── viewmodel
+│   ├── factory
+│   │    ├── AuthViewModelFactory
+│   │    ├── HomeViewModelFactory
+│   │    ├── ProfileViewModelFactory
+│   │    └── TransactionViewModelFactory.kt
+│   ├── AuthViewModel.kt
+│   ├── HomeUiState
+│   ├── HomeViewModel.kt
+│   ├── ProfileViewModel
+│   ├── TransactionUiState
+│   └── TransactionViewModel.kt
 │
 └── MainActivity.kt
 ```
