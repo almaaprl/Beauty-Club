@@ -154,6 +154,8 @@ app/src/main/java/com/example/beautyclub
 
 ## 📸 Screenshot Aplikasi
 
+<img width="246" height="542" alt="image" src="https://github.com/user-attachments/assets/1ddf8a04-2ab9-4446-8f47-5b3b676c39eb" />
+
 ### Login
 
 <img width="355" height="797" alt="image" src="https://github.com/user-attachments/assets/04768737-31a2-43b0-bedf-f43d37a25fd4" />
