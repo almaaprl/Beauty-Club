@@ -42,7 +42,7 @@ class TransactionViewModel(
     }
 
     // Tambah transaksi baru
-    fun addTransaction(memberId: Int, treatmentName: String, amount: Double) {
+    fun addTransaction(memberId: Int, treatmentName: String, amount: Double, onSuccess: () -> Unit = {} ) {
         if (treatmentName.isBlank()) {
             _addState.value = AddTransactionState.Error("Pilih treatment terlebih dahulu")
             return
@@ -75,12 +75,14 @@ class TransactionViewModel(
                 pointEarned = pointEarned,
                 totalPoints = totalPoints
             )
+            onSuccess()
         }
     }
 
     fun resetAddState() {
         _addState.value = AddTransactionState.Idle
     }
+
 }
 
 class TransactionViewModelFactory(

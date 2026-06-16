@@ -29,5 +29,7 @@ data class TransactionEntity(
 
     val pointEarned: Int,
 
-    val date: String
+    val date: String,
+
+    val type: String = "Rewards"  // "Purchases" atau "Rewards"
 )

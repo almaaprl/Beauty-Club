@@ -87,7 +87,7 @@ fun RegisterScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                text     = "Buat akun baru untuk mulai menikmati layanan.",
+                text     = "Create a new account to start enjoying the service",
                 fontSize = 14.sp,
                 color    = TextSecondary
             )
@@ -102,12 +102,12 @@ fun RegisterScreen(
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
 
-                    FormLabel("Nama Lengkap")
+                    FormLabel("Name")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = namaLengkap,
                         onValueChange = { namaLengkap = it },
-                        placeholder   = { Text("Masukkan nama lengkap", color = TextSecondary) },
+                        placeholder   = { Text("Enter your full name", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Person, null, tint = Secondary) },
                         modifier   = Modifier.fillMaxWidth(),
                         shape      = RoundedCornerShape(14.dp),
@@ -122,7 +122,7 @@ fun RegisterScreen(
                     OutlinedTextField(
                         value         = email,
                         onValueChange = { email = it },
-                        placeholder   = { Text("contoh@gmail.com", color = TextSecondary) },
+                        placeholder   = { Text("example@gmail.com", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Email, null, tint = Secondary) },
                         modifier        = Modifier.fillMaxWidth(),
                         shape           = RoundedCornerShape(14.dp),
@@ -133,7 +133,7 @@ fun RegisterScreen(
 
                     Spacer(Modifier.height(20.dp))
 
-                    FormLabel("Nomor Telepon")
+                    FormLabel("Phone Number")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value         = nomorTelepon,
@@ -154,7 +154,7 @@ fun RegisterScreen(
                     OutlinedTextField(
                         value         = password,
                         onValueChange = { password = it },
-                        placeholder   = { Text("Minimal 6 karakter", color = TextSecondary) },
+                        placeholder   = { Text("At least 6 characters", color = TextSecondary) },
                         leadingIcon   = { Icon(Icons.Outlined.Lock, null, tint = Secondary) },
                         trailingIcon  = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -187,7 +187,7 @@ fun RegisterScreen(
                     Spacer(Modifier.height(28.dp))
 
                     PrimaryButton(
-                        text    = if (authState is AuthState.Loading) "Mendaftar..." else "Daftar",
+                        text    = if (authState is AuthState.Loading) "Registering..." else "Register",
                         onClick = {
                             authViewModel.register(
                                 name     = namaLengkap,
@@ -203,9 +203,9 @@ fun RegisterScreen(
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                         Text(
                             text = buildAnnotatedString {
-                                append("Sudah punya akun? ")
+                                append("Already have an account? ")
                                 withStyle(SpanStyle(color = Primary, fontWeight = FontWeight.SemiBold)) {
-                                    append("Masuk Disini")
+                                    append("Sign In")
                                 }
                             },
                             fontSize = 13.sp,

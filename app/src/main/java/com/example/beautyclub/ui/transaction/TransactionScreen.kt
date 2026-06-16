@@ -138,7 +138,7 @@ fun TransactionScreen(
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text     = "Belum ada transaksi",
+                            text     = "No transactions",
                             fontSize = 14.sp,
                             color    = TextSecondary
                         )

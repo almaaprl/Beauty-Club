@@ -32,7 +32,7 @@ class AuthViewModel(
     // ── Login ─────────────────────────────────────────────────────
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Email dan password tidak boleh kosong")
+            _authState.value = AuthState.Error("Email and password cannot be empty")
             return
         }
 
@@ -43,7 +43,7 @@ class AuthViewModel(
                 _loggedInMember.value = member
                 _authState.value = AuthState.Success
             } else {
-                _authState.value = AuthState.Error("Email atau password salah")
+                _authState.value = AuthState.Error("Invalid email or password")
             }
         }
     }
@@ -56,11 +56,11 @@ class AuthViewModel(
         password: String
     ) {
         if (name.isBlank() || email.isBlank() || phone.isBlank() || password.isBlank()) {
-            _authState.value = AuthState.Error("Semua kolom harus diisi")
+            _authState.value = AuthState.Error("All fields are required")
             return
         }
         if (password.length < 6) {
-            _authState.value = AuthState.Error("Password minimal 6 karakter")
+            _authState.value = AuthState.Error("Password must be at least 6 characters")
             return
         }
 
